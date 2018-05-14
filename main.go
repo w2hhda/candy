@@ -1,9 +1,10 @@
 package main
 
 import (
-	_ "candy/routers"
 	"github.com/astaxie/beego"
-	_ "candy/models"
+	_ "github.com/w2hhda/candy/models"
+	_ "github.com/w2hhda/candy/controllers"
+	_ "github.com/w2hhda/candy/routers"
 )
 
 func main() {

@@ -10,6 +10,13 @@ type Token struct {
 	Count string `orm:"column(count)" json:"count" form:"count" valid:"Numeric"`
 }
 
+type Page struct {
+	PageNo     int `json:"page_no"`
+	PageSize   int `json:"page_size"`
+	TotalCount int `json:"total_count"`
+	List	   interface{}
+}
+
 func init() {
 	orm.RegisterModel(new(Token))
 }

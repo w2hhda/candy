@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"candy/models"
+	"github.com/w2hhda/candy/models"
 
 	"strconv"
 	"github.com/astaxie/beego/validation"
@@ -24,7 +24,7 @@ func (c *TokenController) URLMapping() {
 }
 
 // @router /api/token/list [*]
-func (c *TokenController) ListToken()  {
+func (c *TokenController) ListToken() {
 
 }
 
