@@ -14,7 +14,6 @@ type CandyController struct {
 func (c *CandyController) URLMapping() {
 	c.Mapping("ListAllCandyCountAndGame", c.ListAllCandyCountAndGame)
 	c.Mapping("ListCandyPage", c.ListCandyPage)
-	c.Mapping("DistributionCandy", c.DistributionCandy)
 }
 
 // @router /api/candy/list [*]
@@ -70,9 +69,4 @@ func (c *CandyController) ListAllCandyCountAndGame() {
 			"all_game_list":   gList,
 		})
 	}
-}
-
-// @router /api/candy/distribution [*]
-func (c *CandyController) DistributionCandy() {
-
 }

@@ -166,7 +166,7 @@ func (self *AdminController) ListUser() {
 
 	beego.Info("page=", number)
 	// layui page 从1开始, 我们这里从0开始
-	page, err := models.ListUserPage(number-1, limit)
+	page, err := models.ListUser(number-1, limit)
 	if err != nil {
 		self.RetError(errDB)
 	} else {

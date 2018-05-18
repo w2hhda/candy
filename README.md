@@ -15,6 +15,35 @@
     "value" : //具体业务返回
 }
 
+========================================
+### 1. 提交游戏结果
+url： /api/game/record
+参数： 基础参数
+name：用户名
+addr：地址
+candy_type: 糖果类型,
+count: 糖果数量
+game_id: 游戏ID
+
+{
+    "imei":"xxxxxxxx",
+    "addr":"0xfb0a596ec522791b99a7162fee7891a43186745D", //改这个
+    "name":"dada",
+    "game_id":1,
+    "candy_type":1,
+    "count":100
+}
+
+返回：
+{
+    "code": 0,
+    "message": "success",
+    "value": ""
+}
+
+=======17:51============================
+
+
 ### 1.糖果列表
 url： /api/candy/list
 参数： 基础参数
@@ -177,3 +206,4 @@ url：/api/token/list
         }
     ]
 }
+

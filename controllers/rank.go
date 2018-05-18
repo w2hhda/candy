@@ -20,6 +20,7 @@ func (c *RankController) Rank() {
 	var request RecordData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
+		beego.Warn(err)
 		c.RetError(errParse)
 		return
 	}

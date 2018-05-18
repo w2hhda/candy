@@ -57,14 +57,6 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:CandyController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:CandyController"],
 		beego.ControllerComments{
-			Method: "DistributionCandy",
-			Router: `/api/candy/distribution`,
-			AllowHTTPMethods: []string{"*"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:CandyController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:CandyController"],
-		beego.ControllerComments{
 			Method: "ListAllCandyCountAndGame",
 			Router: `/api/candy/index`,
 			AllowHTTPMethods: []string{"*"},
@@ -75,6 +67,14 @@ func init() {
 		beego.ControllerComments{
 			Method: "ListCandyPage",
 			Router: `/api/candy/list`,
+			AllowHTTPMethods: []string{"*"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"],
+		beego.ControllerComments{
+			Method: "RecordGameData",
+			Router: `/api/game/record`,
 			AllowHTTPMethods: []string{"*"},
 			MethodParams: param.Make(),
 			Params: nil})
@@ -95,7 +95,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"],
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
 		beego.ControllerComments{
 			Method: "GetToken",
 			Router: `/api/token/get`,
@@ -103,15 +103,15 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"],
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
 		beego.ControllerComments{
-			Method: "ListTokenByAddr",
+			Method: "ListUserCandy",
 			Router: `/api/token/list`,
 			AllowHTTPMethods: []string{"*"},
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:TokenController"],
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
 		beego.ControllerComments{
 			Method: "SetToken",
 			Router: `/api/token/set`,

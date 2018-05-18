@@ -11,6 +11,7 @@ type Record struct {
 	Count    string `json:"count" orm:"column(count)"`
 	Candy    *Candy `json:"candy" orm:"rel(one)"`
 	CreateAt string `json:"create_at" orm:"column(create_at)"`
+	Game     *Game  `json:"game" orm:"rel(one)"`
 }
 
 func (r *Record) TableName() string {
