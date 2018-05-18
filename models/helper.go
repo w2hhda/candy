@@ -14,5 +14,7 @@ func init() {
 	password := beego.AppConfig.String("sqlpass")
 	dbName := beego.AppConfig.String("sqldb")
 	orm.RegisterDataBase("default", "mysql", user+":"+password+"@/"+dbName+"?charset=utf8")
+
+	orm.RegisterModel(new(Candy), new(Record), new(Game), new(Token), new(User))
 }
 

@@ -1,0 +1,76 @@
+<div class="layui-layout layui-layout-admin" style="padding-left: 20px;">
+    <div class="layui-row" style="margin-top: 20px;">
+
+    </div>
+
+    <table class="layui-hide" id="table_list" lay-filter="table_filter">
+    </table>
+
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-xs" lay-event="disable">禁用 | 启用</a>
+    </script>
+</div>
+<script>
+
+    layui.use(['table', 'form', 'element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var element = layui.element;
+
+        //方法级渲染
+        table.render({
+            elem: '#table_list'
+            , url: '/admin/user/list'
+            , method: 'post'
+            , cols: [[
+                {field: 'id', title: '序号'},
+                {field: 'addr', title: '用户地址'},
+                {field: 'create_at', title: '创建时间'},
+                {field: 'status', title: '禁用'}
+                , {fixed: 'right', width: 260, align: 'center', toolbar: '#bar'}
+            ]]
+            , id: 'listReload'
+            , page: true
+            , height: "full-130"
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                table.reload('listReload');
+            }
+        };
+
+        table.on('tool(table_filter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'disable') {
+                var msg = "";
+                if (data.status == 1) {
+                    msg = '真的启用【' + data.addr + '】么';
+                } else {
+                    msg = '真的禁用【' + data.addr + '】么';
+                }
+
+                layer.confirm(msg, function () {
+                    var disable_addr = {"addr": data.addr, "status": data.status}
+                    $.post('/admin/disable', disable_addr, function (out) {
+                        if (out.code == 0) {
+                            layer.msg("操作成功", {icon: 1}, function () {
+                                $("#reload_").click();
+                            })
+                        } else {
+                            layer.msg(out.message)
+                        }
+                    }, "json");
+                    return false;
+                });
+                return false;
+            }
+        });
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>

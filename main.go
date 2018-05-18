@@ -7,6 +7,10 @@ import (
 	_ "github.com/w2hhda/candy/routers"
 )
 
+func init()  {
+
+}
+
 func main() {
 
 	if beego.BConfig.RunMode == "dev" {

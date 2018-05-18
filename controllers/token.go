@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"github.com/astaxie/beego/validation"
 	"errors"
+	"encoding/json"
 )
 
 const ADDR = "addr"
@@ -17,15 +18,63 @@ type TokenController struct {
 	BaseController
 }
 
+type Data struct {
+	models.Request
+	Addrs      []string `json:"addrs"`
+	PageNumber int64    `json:"page_number"`
+}
+
 func (c *TokenController) URLMapping() {
 	c.Mapping("GetToken", c.GetToken)
 	c.Mapping("SetToken", c.SetToken)
-	c.Mapping("ListToken", c.ListToken)
+	c.Mapping("ListTokenByAddr", c.ListTokenByAddr)
+
 }
 
-// @router /api/token/list [*]
-func (c *TokenController) ListToken() {
 
+// @router /api/token/list [*]
+func (c *TokenController) ListTokenByAddr() {
+
+	var request Data
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		beego.Warn(err)
+		c.RetError(errParse)
+		return
+	}
+
+	beego.Info("request=", request)
+	list, err := models.ListTokenByAddr(request.Addrs)
+
+	var retValue []models.UserToken
+	tokenCount := make(map[string]string)
+	tokenAddr := make(map[string][]string)
+	tokenRate := make(map[string]float64)
+	for _, token := range list {
+		//糖果类型
+		candyLabel := token.Candy.CandyLabel
+		//糖果数量
+		count := parseFloat(tokenCount[candyLabel]) + parseFloat(token.Count)
+		tokenCount[candyLabel] = parseString(count)
+		//糖果地址
+		tokenAddr[candyLabel] = append(tokenAddr[candyLabel], token.Addr)
+		//糖果价格
+		tokenRate[candyLabel] = token.Candy.Rate
+	}
+
+	for label, addrs := range tokenAddr {
+		value := models.UserToken{
+			Addr: addrs, Label: label, Count: tokenCount[label], Rate: tokenRate[label],
+		}
+		retValue = append(retValue, value)
+	}
+
+	if err != nil {
+		beego.Warn(err)
+		c.RetError(errDB)
+	} else {
+		c.RetSuccess(retValue)
+	}
 }
 
 // @router /api/token/get [*]
@@ -112,6 +161,9 @@ func parseAndValidParams(c *BaseController, token *models.Token) error {
 }
 
 func parseString(input float64) string {
+	if input == 0 {
+		return "0"
+	}
 	return strconv.FormatFloat(input, 'E', -1, 64)
 }
 

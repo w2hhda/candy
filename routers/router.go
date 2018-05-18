@@ -6,5 +6,9 @@ import (
 )
 
 func init() {
-	beego.Include(&controllers.TokenController{}, &controllers.CandyController{})
+	beego.Include(&controllers.TokenController{},
+		&controllers.CandyController{},
+		&controllers.RankController{},
+		&controllers.RecordController{},
+		&controllers.AdminController{})
 }
