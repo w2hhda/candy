@@ -2,11 +2,10 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
-	"time"
 	"github.com/astaxie/beego"
-	"strconv"
 	"errors"
 	"github.com/w2hhda/candy/utils"
+	"math/big"
 )
 
 type Game struct {
@@ -23,7 +22,7 @@ type GameData struct {
 	Name   string `json:"name"`
 	Addr   string `json:"addr"`
 	Type   int    `json:"candy_type"`
-	Count  int    `json:"count"`
+	Count  string `json:"count"`
 	GameId int    `json:"game_id"`
 }
 
@@ -32,7 +31,7 @@ func GameTableName() string {
 }
 
 func (this *Game) TableName() string {
-	return "game"
+	return GameTableName()
 }
 
 func (this *Game) Query() orm.QuerySeter {
@@ -76,28 +75,32 @@ func RecordGameData(request GameData) error {
 
 	// 4. 更新糖果表 token 表
 	token := Token{}
-	err := o.QueryTable(UserCandyTableName()).Filter("addr", request.Addr).
+	err := o.QueryTable(TokenTableName()).Filter("addr", request.Addr).
 		Filter("candy_id", request.Type).One(&token)
 	if err != nil {
 		beego.Warn("查询token错误: ", err)
 	}
 
+	reqCount, _ := new(big.Int).SetString(request.Count, 10)
+	tCount, _ := new(big.Int).SetString(token.Count, 10)
 	beego.Info("update token", token)
-	countStr := strconv.Itoa(request.Count)
-	if token.Id > 0 { //数据转换
-		count := parseFloat(token.Count) + float64(request.Count)
-		token.Count = parseString(count)
-		token.UpdateAt = time.Now().String()
-		_, err := o.Update(&token)
+	if token.Id > 0 {
+		beego.Warn("token id", token.Id)
+		count := new(big.Int).Add(tCount, reqCount)
+		_, err := o.QueryTable(TokenTableName()).Filter("addr", request.Addr).
+			Filter("candy_id", request.Type).Update(orm.Params{
+			"count":     count.String(),
+			"update_at": utils.GetTimestampString(),
+		})
 		if err != nil {
 			beego.Warn(err)
 			o.Rollback()
 			return err
 		}
 	} else {
-		token.Count = countStr
+		token.Count = reqCount.String()
 		token.Addr = request.Addr
-		token.UpdateAt = time.Now().String()
+		token.UpdateAt = utils.GetTimestampString()
 		token.Candy = &Candy{
 			CandyType: request.Type,
 		}
@@ -110,18 +113,17 @@ func RecordGameData(request GameData) error {
 	}
 
 	//5. 插入记录表record
-
 	exist = o.QueryTable(GameTableName()).Filter("id", request.GameId).Exist()
 	if !exist {
 		beego.Warn("非官方游戏")
 		o.Rollback()
-		return err
+		return errors.New("非官方游戏")
 	}
 
 	record := Record{
 		Addr:     request.Addr,
 		CreateAt: utils.GetTimestampString(),
-		Count:    countStr,
+		Count:    request.Count,
 		Candy: &Candy{
 			CandyType: request.Type,
 		},

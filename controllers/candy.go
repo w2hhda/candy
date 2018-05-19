@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/w2hhda/candy/models"
 	"github.com/astaxie/beego"
-	"strconv"
 	"encoding/json"
+	"math/big"
 )
 
 type CandyController struct {
@@ -53,19 +53,19 @@ func (c *CandyController) ListAllCandyCountAndGame() {
 			c.RetError(errDB)
 		}
 
-		var allCount float64
+		var allCount big.Int
 		for _, candy := range list {
-			count, err := strconv.ParseFloat(candy.AllCount, 64)
 			if err != nil {
 				c.RetError(errDB)
 				break
 			} else {
-				allCount += count
+				count, _ := big.NewInt(1).SetString(candy.AllCount, 10)
+				allCount = *big.NewInt(1).Add(&allCount, count)
 			}
 		}
 
 		c.RetSuccess(map[string]interface{}{
-			"all_candy_count": parseString(allCount),
+			"all_candy_count": allCount.String(),
 			"all_game_list":   gList,
 		})
 	}

@@ -97,24 +97,8 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
 		beego.ControllerComments{
-			Method: "GetToken",
-			Router: `/api/token/get`,
-			AllowHTTPMethods: []string{"*"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
-		beego.ControllerComments{
 			Method: "ListUserCandy",
 			Router: `/api/token/list`,
-			AllowHTTPMethods: []string{"*"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "SetToken",
-			Router: `/api/token/set`,
 			AllowHTTPMethods: []string{"*"},
 			MethodParams: param.Make(),
 			Params: nil})

@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego"
+	"math/big"
 )
 
 type RankInfo struct {
@@ -12,7 +13,7 @@ type RankInfo struct {
 
 func Rank(lastPageNumber int64) (Page, error) {
 
-	page, err := countPage(UserCandyTableName(), lastPageNumber)
+	page, err := countPage(TokenTableName(), lastPageNumber)
 	var rankInfo []RankInfo
 	db := DB()
 	stmt, _ := db.Prepare("SELECT SUM(token.count) AS count, addr FROM token GROUP BY addr ORDER BY count DESC LIMIT ? OFFSET ?;")
@@ -28,15 +29,17 @@ func Rank(lastPageNumber int64) (Page, error) {
 		beego.Info(value.Addr)
 		//计算价格
 		token, _ := ListUserCandyByAddr([]string{value.Addr})
-		var price float64
+		var price big.Float
 		for _, t := range token {
-			price += t.Candy.Rate * parseFloat(t.Count)
+			f, _, _ := new(big.Float).Parse(t.Count, 10)
+			r, _, _ := new(big.Float).Parse(parseString(t.Candy.Rate), 10)
+			price = *new(big.Float).Add(new(big.Float).Mul(r, f), &price)
 		}
-		beego.Info("==>>", price)
-		value.Value = parseString(price)
+		value.Value = price.String()
 		rankInfo = append(rankInfo, value)
 	}
 	page.List = rankInfo
 	page.PageSize = int64(len(rankInfo))
+
 	return page, err
 }

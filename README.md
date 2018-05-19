@@ -49,6 +49,10 @@ url： /api/candy/list
 参数： 基础参数
       page_number：代表上一页的页码，第一次取传0
       addrs ：地址数组
+{
+    "page_number": 0,
+    "addrs":["0xfb0a596ec522791b99a7162fee7891a43186745R"]
+}
 返回：
 {
     "code": 0,
@@ -57,7 +61,7 @@ url： /api/candy/list
         "page_number": 1,
         "page_size": 10,
         "total_page": 1,
-        "List": [
+        "list": [
             {
                 "id": 7,
                 "all_count": "1000000",

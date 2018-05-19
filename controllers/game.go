@@ -5,6 +5,7 @@ import (
 	"github.com/w2hhda/candy/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
+	"math/big"
 )
 
 type GameController struct {
@@ -25,6 +26,7 @@ func (c *GameController) RecordGameData() {
 	var request models.GameData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
+		beego.Info("RecordGameData", err)
 		c.RetError(errParse)
 		return
 	}
@@ -34,6 +36,12 @@ func (c *GameController) RecordGameData() {
 	valid.Required(request.Count, "count")
 	valid.Required(request.Type, "type")
 	valid.Required(request.Addr, "addr")
+
+	_, b := new(big.Int).SetString(request.Count, 10)
+	if !b {
+		c.RetError(errParams)
+		return
+	}
 
 	if valid.HasErrors() {
 		for _, err := range valid.Errors {
@@ -45,7 +53,7 @@ func (c *GameController) RecordGameData() {
 
 	err = models.RecordGameData(request)
 	if err != nil {
-		c.RetError(errDB)
+		c.RetError(&models.Response{10004, err.Error(), new(interface{})})
 	} else {
 		c.RetSuccess("")
 	}

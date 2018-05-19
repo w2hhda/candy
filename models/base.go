@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego"
+	"math/big"
 )
 
 type Request struct {
@@ -19,11 +20,11 @@ type Response struct {
 }
 
 type Page struct {
-	PageNumber int64 `json:"page_number"`
-	PageSize   int64 `json:"page_size"`
-	TotalPage  int64 `json:"total_page"`
-	TotalCount int64 `json:"total_count"`
-	List       interface{}
+	PageNumber int64       `json:"page_number"`
+	PageSize   int64       `json:"page_size"`
+	TotalPage  int64       `json:"total_page"`
+	TotalCount int64       `json:"total_count"`
+	List       interface{} `json:"list"`
 }
 
 type LayuiPageResponse struct {
@@ -36,7 +37,7 @@ type LayuiPageResponse struct {
 type UserToken struct {
 	Addr  []string `json:"addr"`
 	Label string   `json:"label"`
-	Count string   `json:"count"`
+	Count big.Int  `json:"count"`
 	Icon  string   `json:"icon"`
 	Rate  float64  `json:"rate"`
 }

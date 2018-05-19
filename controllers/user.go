@@ -2,13 +2,12 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
 	"github.com/w2hhda/candy/models"
 
-	"strconv"
 	"github.com/astaxie/beego/validation"
 	"errors"
 	"encoding/json"
+	"math/big"
 )
 
 const ADDR = "addr"
@@ -21,8 +20,6 @@ type UserController struct {
 }
 
 func (c *UserController) URLMapping() {
-	c.Mapping("GetToken", c.GetToken)
-	c.Mapping("SetToken", c.SetToken)
 	c.Mapping("ListUserCandy", c.ListUserCandy)
 }
 
@@ -42,15 +39,17 @@ func (c *UserController) ListUserCandy() {
 	list, err := models.ListUserCandyByAddr(request.Addrs)
 
 	var retValue []models.UserToken
-	tokenCount := make(map[string]string)
+	tokenCount := make(map[string]big.Int)
 	tokenAddr := make(map[string][]string)
 	tokenRate := make(map[string]float64)
 	for _, token := range list {
 		//糖果类型
 		candyLabel := token.Candy.CandyLabel
 		//糖果数量
-		count := parseFloat(tokenCount[candyLabel]) + parseFloat(token.Count)
-		tokenCount[candyLabel] = parseString(count)
+		candyCount := tokenCount[candyLabel]
+		tCount, _ := big.NewInt(1).SetString(token.Count, 10)
+		count := big.NewInt(1).Add(&candyCount, tCount)
+		tokenCount[candyLabel] = *count
 		//糖果地址
 		tokenAddr[candyLabel] = append(tokenAddr[candyLabel], token.Addr)
 		//糖果价格
@@ -70,68 +69,6 @@ func (c *UserController) ListUserCandy() {
 	} else {
 		c.RetSuccess(retValue)
 	}
-}
-
-// @router /api/token/get [*]
-func (c *UserController) GetToken() {
-
-	token := models.Token{}
-	if err := parseAndValidParams(&c.BaseController, &token); err != nil {
-		return
-	}
-
-	beego.Info("token=", token)
-
-	o := orm.NewOrm()
-	err := o.Read(&token, ADDR, TYPE)
-	if err != nil {
-		beego.Warn(err)
-		c.RetError(errParams)
-	} else {
-		c.RetSuccess(token)
-	}
-}
-
-// @router /api/token/set [*]
-func (c *UserController) SetToken() {
-
-	token := models.Token{}
-	if err := parseAndValidParams(&c.BaseController, &token); err != nil {
-		return
-	}
-
-	beego.Info("token=", token)
-
-	var addCount float64
-	var amountErr error
-	addCount, amountErr = strconv.ParseFloat(token.Count, 64)
-	if amountErr != nil {
-		c.RetError(errParams)
-		return
-	}
-
-	o := orm.NewOrm()
-	err := o.Read(&token, ADDR, TYPE)
-
-	if err == nil || err == orm.ErrNoRows {
-		dbCount := parseFloat(token.Count) + addCount
-		token.Count = parseString(dbCount)
-		if err == nil {
-			_, err := o.Update(token)
-			if err != nil {
-				beego.Error(err)
-			}
-		} else {
-			_, err := o.Insert(dbCount)
-			if err != nil {
-				beego.Error(err)
-			}
-		}
-		c.RetSuccess(new(interface{}))
-	} else {
-		c.RetError(errDB)
-	}
-
 }
 
 func parseAndValidParams(c *BaseController, token *models.Token) error {

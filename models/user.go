@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego"
+	"math/big"
 )
 
 type User struct {
@@ -25,13 +26,13 @@ func UserTableName() string {
 	return "user"
 }
 
-func UserCandyTableName() string {
+func TokenTableName() string {
 	return "token"
 }
 
 func ListUserCandyByAddr(addrs []string) ([]Token, error) {
 	var token []Token
-	_, err := orm.NewOrm().QueryTable(UserCandyTableName()).Filter("addr__in", addrs).RelatedSel().All(&token)
+	_, err := orm.NewOrm().QueryTable(TokenTableName()).Filter("addr__in", addrs).RelatedSel().All(&token)
 	beego.Info(token)
 	return token, err
 }
@@ -53,15 +54,17 @@ func ListCandyPage(lastPageNumber int64, limit int64) (Page, error) {
 	beego.Info("user", addrs)
 	list, _ := ListUserCandyByAddr(addrs)
 
-	tokenCount := make(map[string]string)
+	tokenCount := make(map[string]big.Int)
 	tokenAddr := make(map[string][]string)
 	tokenRate := make(map[string]float64)
 	for _, token := range list {
 		//糖果类型
 		candyLabel := token.Candy.CandyLabel
 		//糖果数量
-		count := parseFloat(tokenCount[candyLabel]) + parseFloat(token.Count)
-		tokenCount[candyLabel] = parseString(count)
+		candyCount := tokenCount[candyLabel]
+		tCount, _ := big.NewInt(1).SetString(token.Count, 10)
+		count := big.NewInt(1).Add(&candyCount, tCount)
+		tokenCount[candyLabel] = *count
 		//糖果地址
 		tokenAddr[candyLabel] = append(tokenAddr[candyLabel], token.Addr)
 		//糖果价格

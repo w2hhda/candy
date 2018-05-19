@@ -12,6 +12,7 @@ type Candy struct {
 	CandyLabel     string  `json:"candy_label" orm:"column(candy_label)"`
 	CandyType      int     `json:"candy_type" orm:"pk;column(candy_type)"`
 	Rate           float64 `json:"rate" orm:"column(rate)"`
+	Decimal        int     `json:"decimal" orm:"column(decimal)"`
 }
 
 func CandyTableName() string {
@@ -19,7 +20,7 @@ func CandyTableName() string {
 }
 
 func (this *Candy) TableName() string {
-	return "candy"
+	return CandyTableName()
 }
 
 func (this *Candy) Query() orm.QuerySeter {
