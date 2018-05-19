@@ -6,12 +6,13 @@ import (
 )
 
 type Record struct {
-	Id       int    `json:"id" orm:"column(id)"`
-	Addr     string `json:"addr" orm:"column(addr)"`
-	Count    string `json:"count" orm:"column(count)"`
-	Candy    *Candy `json:"candy" orm:"rel(one)"`
-	CreateAt string `json:"create_at" orm:"column(create_at)"`
-	Game     *Game  `json:"game" orm:"rel(one)"`
+	Id          int    `json:"id" orm:"column(id)"`
+	Addr        string `json:"addr" orm:"column(addr)"`
+	Count       string `json:"count" orm:"column(count)"`
+	Candy       *Candy `json:"candy" orm:"rel(one)"`
+	CreateAt    string `json:"create_at" orm:"column(create_at)"`
+	Game        *Game  `json:"game" orm:"rel(one)"`
+	GameFieldId string `json:"game_filed_id" orm:"column(game_field_id)"`
 }
 
 func (r *Record) TableName() string {

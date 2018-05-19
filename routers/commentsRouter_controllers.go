@@ -73,8 +73,24 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"],
 		beego.ControllerComments{
+			Method: "GameOver",
+			Router: `/api/game/over`,
+			AllowHTTPMethods: []string{"*"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"],
+		beego.ControllerComments{
 			Method: "RecordGameData",
 			Router: `/api/game/record`,
+			AllowHTTPMethods: []string{"*"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"] = append(beego.GlobalControllerRouter["github.com/w2hhda/candy/controllers:GameController"],
+		beego.ControllerComments{
+			Method: "GameStart",
+			Router: `/api/game/start`,
 			AllowHTTPMethods: []string{"*"},
 			MethodParams: param.Make(),
 			Params: nil})
