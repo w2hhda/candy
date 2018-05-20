@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/w2hhda/candy/utils"
 	"math/big"
+	"strconv"
 )
 
 type GameCandy struct {
@@ -76,43 +77,88 @@ func (this *Game) ListAllGame() ([]Game, error) {
 	return list, err
 }
 
+func InsertNoExistUser(o orm.Ormer, players []GamePlayer) error {
+	for _, player := range players {
+		user := User{
+			Addr:     player.Addr,
+			CreateAt: utils.GetTimestampString(),
+			Name:     player.Name,
+			Status:   0,
+		}
+		b, i, err := o.ReadOrCreate(&user, "addr")
+		beego.Info("InsertNoExistUser", b, i, err)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+
+}
+
+func DispatchCandy(o orm.Ormer, game *Game, candy *Candy, request *GameRunningData, len int) (string, error) {
+	remainingCount, _ := new(big.Int).SetString(candy.RemainingCount, 10)
+	dispatchCount := big.NewInt(int64(candy.Average * len))
+	remainingCount = new(big.Int).Sub(remainingCount, dispatchCount)
+	_, err := o.QueryTable(CandyTableName()).Filter("id", candy.Id).Update(orm.Params{
+		"remaining_count": remainingCount.String(),
+	})
+	if err != nil {
+		beego.Warn(err)
+		return "", err
+	}
+	err = InsertNoExistGameCandy(o, game, candy, request.GameFieldId, dispatchCount.Int64())
+	if err != nil {
+		beego.Warn(err)
+		return "", err
+	}
+	return dispatchCount.String(), nil
+}
+
+func InsertNoExistGameCandy(o orm.Ormer, game *Game, candy *Candy, gameFieldId string, candyPool int64) error {
+	gameCandy := GameCandy{
+		GameFieldId:  gameFieldId,
+		CandyPool:    candyPool,
+		CandyConsume: 0,
+		Candy:        candy,
+		Game:         game,
+	}
+
+	//是否记录已经创建过了
+	err := o.Read(&gameCandy, "game_field_id", "game_id", "candy_id")
+	if err != nil && err != orm.ErrNoRows {
+		beego.Warn(err)
+		return err
+	}
+
+	if gameCandy.Id > 0 {
+		beego.Warn("游戏已经创健了")
+		return errors.New("游戏已经创健了")
+	}
+
+	_, err = o.Insert(&gameCandy)
+	if err != nil {
+		beego.Warn(err)
+		return err
+	}
+
+	return nil
+}
+
 //1 . 分配糖果, 修改candy表和gamecandy表
 //2 . 记录到record和gamecandy表中
 func ReadOrInsert(normal, diamond Candy, request GameRunningData) (string, string, error) {
 	o := orm.NewOrm()
 	o.Begin()
 
-	// 3. 分配糖果, 修改candy表和 gamecandy表
-	// 普通糖果
-	remainingCount, _ := new(big.Int).SetString(normal.RemainingCount, 10)
-	normalCut := big.NewInt(int64(normal.Average * len(request.GamePlayer)))
-	beego.Error("normalCut", normalCut)
-	remainingCount = new(big.Int).Sub(remainingCount, normalCut)
-	_, err := o.QueryTable(CandyTableName()).Filter("id", normal.Id).Update(orm.Params{
-		"remaining_count": remainingCount.String(),
-	})
+	//1. 判断有没有这个用户
+	err := InsertNoExistUser(o, request.GamePlayer)
 	if err != nil {
 		beego.Warn(err)
 		o.Rollback()
 		return "", "", err
 	}
-	// 钻石糖果
-	var diamondCut *big.Int
-	if diamond.Id > 0 {
-		diamondCount, _ := new(big.Int).SetString(diamond.RemainingCount, 10)
-		diamondCut = big.NewInt(int64(diamond.Average * 3))
-		diamondCount = new(big.Int).Sub(diamondCount, diamondCut)
-		_, err = o.QueryTable(CandyTableName()).Filter("id", diamond.Id).Update(orm.Params{
-			"remaining_count": diamondCount.String(),
-		})
-		if err != nil {
-			beego.Warn(err)
-			o.Rollback()
-			return "", "", err
-		}
-	}
 
-	//4. 插入gamecandy
+	//3. 插入gamecandy
 	var game Game
 	err = o.QueryTable(GameTableName()).Filter("id", request.GameId).One(&game)
 	if err != nil {
@@ -121,22 +167,27 @@ func ReadOrInsert(normal, diamond Candy, request GameRunningData) (string, strin
 		return "", "", err
 	}
 
-	gameCandy := &GameCandy{
-		GameFieldId:  request.GameFieldId,
-		CandyPool:    remainingCount.Int64(),
-		CandyConsume: 0,
-		Candy:        &normal,
-		Game:         &game,
-	}
-
-	_, err = o.Insert(gameCandy)
+	// 2. 分配糖果, 修改candy表和 gamecandy表
+	// 普通糖果
+	normalDispatchCount, err := DispatchCandy(o, &game, &normal, &request, len(request.GamePlayer))
 	if err != nil {
 		beego.Warn(err)
 		o.Rollback()
 		return "", "", err
 	}
+	// 钻石糖果
+	var diamondDispatchCount string
+	if diamond.Id > 0 {
+		drc, err := DispatchCandy(o, &game, &diamond, &request, DIAMOND_LEN)
+		diamondDispatchCount = drc
+		if err != nil {
+			beego.Warn(err)
+			o.Rollback()
+			return "", "", err
+		}
+	}
 
-	//插入record表
+	//4. 插入record表
 	for _, player := range request.GamePlayer {
 		normalRecord := Record{
 			Addr:     player.Addr,
@@ -183,102 +234,136 @@ func ReadOrInsert(normal, diamond Candy, request GameRunningData) (string, strin
 	}
 
 	o.Commit()
-	return normalCut.String(), diamondCut.String(), nil
+	return normalDispatchCount, diamondDispatchCount, nil
 }
 
-func RecordGameData(request GameData) error {
+func UpdateGameData(request GameRunningData) error {
 	o := orm.NewOrm()
 	o.Begin()
-	//1. 判断有没有这个用户
-	exist := o.QueryTable(UserTableName()).Filter("addr", request.Addr).Exist()
-	if !exist {
-		// 2. 插入用户表 user 表
-		user := User{
-			Addr:     request.Addr,
-			Status:   0,
-			Name:     request.Name,
-			CreateAt: utils.GetTimestampString(),
-		}
-		_, err := o.Insert(&user)
-		if err != nil {
-			beego.Warn(err)
-			o.Rollback()
-			return err
-		}
-	}
-
-	// 3. 查询这个糖果的类型是不是正确的
-	exist = o.QueryTable(CandyTableName()).Filter("candy_type", request.Type).Exist()
-	if !exist {
-		beego.Warn("输入糖果类型不正确")
-		o.Rollback()
-		return errors.New("输入糖果类型不正确")
-	}
-
-	// 4. 更新糖果表 token 表
-	token := Token{}
-	err := o.QueryTable(TokenTableName()).Filter("addr", request.Addr).
-		Filter("candy_id", request.Type).One(&token)
-	if err != nil {
-		beego.Warn("查询token错误: ", err)
-	}
-
-	reqCount, _ := new(big.Int).SetString(request.Count, 10)
-	tCount, _ := new(big.Int).SetString(token.Count, 10)
-	beego.Info("update token", token)
-	if token.Id > 0 {
-		beego.Warn("token id", token.Id)
-		count := new(big.Int).Add(tCount, reqCount)
-		_, err := o.QueryTable(TokenTableName()).Filter("addr", request.Addr).
-			Filter("candy_id", request.Type).Update(orm.Params{
-			"count":     count.String(),
-			"update_at": utils.GetTimestampString(),
-		})
-		if err != nil {
-			beego.Warn(err)
-			o.Rollback()
-			return err
-		}
-	} else {
-		token.Count = reqCount.String()
-		token.Addr = request.Addr
-		token.UpdateAt = utils.GetTimestampString()
-		token.Candy = &Candy{
-			CandyType: request.Type,
-		}
-		_, err := o.Insert(&token)
-		if err != nil {
-			beego.Warn(err)
-			o.Rollback()
-			return err
-		}
-	}
-
-	//5. 插入记录表record
-	exist = o.QueryTable(GameTableName()).Filter("id", request.GameId).Exist()
-	if !exist {
-		beego.Warn("非官方游戏")
-		o.Rollback()
-		return errors.New("非官方游戏")
-	}
-
-	record := Record{
-		Addr:     request.Addr,
-		CreateAt: utils.GetTimestampString(),
-		Count:    request.Count,
-		Candy: &Candy{
-			CandyType: request.Type,
-		},
+	//1. 查询game_candy表
+	gameCandy := GameCandy{
+		GameFieldId: request.GameFieldId,
 		Game: &Game{
 			Id: request.GameId,
 		},
 	}
-
-	_, err = o.Insert(&record)
-	if err != nil {
+	err := orm.NewOrm().Read(&gameCandy, "game_field_id", "game_id")
+	if err != nil && err != orm.ErrNoRows {
 		beego.Warn(err)
 		o.Rollback()
 		return err
+	}
+
+	// 存在游戏记录
+	if gameCandy.Id < 0 {
+		beego.Warn("没有分配记录")
+		o.Rollback()
+		return errors.New("没有找到游戏记录")
+	}
+
+	// 得分不能大于分配的数量
+	var allScore int64
+	for _, player := range request.GamePlayer {
+
+		score, _ := strconv.ParseInt(player.Score, 10, 64)
+		allScore += score
+
+		if score > gameCandy.CandyPool {
+			beego.Warn("得到的糖果不对")
+			o.Rollback()
+			return errors.New("得到的糖果不对")
+		}
+
+		// 查询record表
+		record := Record{
+			Addr:        player.Addr,
+			GameFieldId: request.GameFieldId,
+			Game:        gameCandy.Game,
+		}
+		err := o.Read(&record, "addr", "game_field_id", "game_id")
+		if err != nil {
+			beego.Warn("账单中没有记录", err)
+			o.Rollback()
+			return errors.New("账单中没有记录")
+		}
+
+		// 判断是否已经加过了，防止重复提交
+		count, _ := strconv.ParseInt(record.Count, 10, 64)
+		if count > 0 {
+			beego.Warn("糖果已经加过了", err)
+			o.Rollback()
+			return errors.New("糖果已经加过了")
+		}
+
+		record.Count = strconv.FormatInt(score+count, 10)
+		o.Update(&record, "count")
+
+		//更新token表
+		token := Token{
+			Addr:  player.Addr,
+			Candy: record.Candy,
+		}
+
+		err = o.Read(&token, "addr", "candy_id")
+		if err != nil && err != orm.ErrNoRows {
+			beego.Warn("查询个人糖果失败", err)
+			o.Rollback()
+			return errors.New("查询个人糖果失败")
+		}
+
+		token.UpdateAt = utils.GetTimestampString()
+		if token.Id > 0 {
+			tCount, _ := new(big.Int).SetString(token.Count, 10)
+			rCount := new(big.Int).And(tCount, big.NewInt(score))
+			token.Count = rCount.String()
+			_, err = o.Update(&token, "count", "update_at")
+			if err != nil {
+				beego.Warn("更新个人糖果失败", err)
+				o.Rollback()
+				return errors.New("更新个人糖果失败")
+			}
+		} else {
+			token.Count = big.NewInt(score).String()
+			_, err = o.Insert(&token)
+			if err != nil {
+				beego.Warn("插入个人糖果失败", err)
+				o.Rollback()
+				return errors.New("插入个人糖果失败")
+			}
+		}
+
+	}
+	//更新game_candy
+	if gameCandy.CandyPool < allScore {
+		beego.Warn("插入个人糖果大于分配的数量", err)
+		o.Rollback()
+		return errors.New("插入个人糖果大于分配的数量")
+	}
+
+	gameCandy.CandyConsume = allScore
+	_, err = o.Update(&gameCandy, "candy_consume")
+	if err != nil {
+		beego.Warn("更新游戏糖果表失败", err)
+		o.Rollback()
+		return errors.New("更新游戏糖果表失败")
+	}
+
+	// 更新candy表
+	err = o.Read(gameCandy.Candy)
+	if err != nil && err != orm.ErrNoRows {
+		beego.Warn("查询糖果表失败", err)
+		o.Rollback()
+		return errors.New("查询糖果表失败")
+	}
+	reCount, _ := new(big.Int).SetString(gameCandy.Candy.RemainingCount, 10)
+	reCount = reCount.And(reCount, big.NewInt(gameCandy.CandyPool-allScore))
+	gameCandy.Candy.RemainingCount = reCount.String()
+
+	_, err = o.Update(gameCandy.Candy, "remaining_count")
+	if err != nil {
+		beego.Warn("更新糖果表失败", err)
+		o.Rollback()
+		return errors.New("更新糖果表失败")
 	}
 
 	o.Commit()
