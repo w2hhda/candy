@@ -17,13 +17,15 @@ func (c *RankController) URLMapping() {
 // @router /api/rank [*]
 func (c *RankController) Rank() {
 
-	var request RecordData
+	var request RequestData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		beego.Warn(err)
 		c.RetError(errParse)
 		return
 	}
+
+	beego.Info("request", request)
 
 	values, err := models.Rank(request.PageNumber)
 	if err != nil {

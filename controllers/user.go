@@ -27,7 +27,7 @@ func (c *UserController) URLMapping() {
 // @router /api/token/list [*]
 func (c *UserController) ListUserCandy() {
 
-	var request Data
+	var request RequestData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		beego.Warn(err)

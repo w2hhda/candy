@@ -10,12 +10,6 @@ type RecordController struct {
 	BaseController
 }
 
-type RecordData struct {
-	models.Request
-	PageNumber int64    `json:"page_number"`
-	Addrs      []string `json:"addrs"`
-}
-
 func (c *RecordController) URLMapping() {
 	c.Mapping("Record", c.Record)
 }
@@ -23,7 +17,7 @@ func (c *RecordController) URLMapping() {
 // @router /api/record/list [*]
 func (c *RecordController) Record() {
 
-	var request RecordData
+	var request RequestData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		c.RetError(errParse)

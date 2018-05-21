@@ -19,7 +19,7 @@ func (c *CandyController) URLMapping() {
 // @router /api/candy/list [*]
 func (c *CandyController) ListCandyPage() {
 
-	var request RecordData
+	var request RequestData
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		c.RetError(errParse)

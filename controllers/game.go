@@ -21,10 +21,6 @@ func (c *GameController) TableName() string {
 	return "game"
 }
 
-func GameCandyTableName() string {
-	return "gamecandy"
-}
-
 // @router /api/game/start [*]
 func (c *GameController) GameStart() {
 	var request models.GameRunningData

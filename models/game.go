@@ -55,10 +55,6 @@ type GameStartData struct {
 	CandyLabel string `json:"candy_label"`
 }
 
-func GameCandyTableName() string {
-	return "gamecandy"
-}
-
 func GameTableName() string {
 	return "game"
 }

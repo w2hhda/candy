@@ -6,9 +6,10 @@ import (
 )
 
 type RankInfo struct {
-	Addr  string `json:"addr"`
-	Count string `json:"count"`
-	Value string `json:"value"`
+	Addr      string   `json:"addr"`
+	Count     string   `json:"count"`
+	Value     string   `json:"value"`
+	CandyInfo []*Candy `json:"candy_info"`
 }
 
 func Rank(lastPageNumber int64) (Page, error) {
@@ -25,6 +26,7 @@ func Rank(lastPageNumber int64) (Page, error) {
 
 	for rows.Next() {
 		value := RankInfo{}
+		var candyInfo []*Candy
 		rows.Scan(&value.Count, &value.Addr)
 		beego.Info(value.Addr)
 		//计算价格
@@ -34,8 +36,16 @@ func Rank(lastPageNumber int64) (Page, error) {
 			f, _, _ := new(big.Float).Parse(t.Count, 10)
 			r, _, _ := new(big.Float).Parse(parseString(t.Candy.Rate), 10)
 			price = *new(big.Float).Add(new(big.Float).Mul(r, f), &price)
+			candyInfo = append(candyInfo, &Candy{
+				Alias:      t.Candy.Alias,
+				CandyLabel: t.Candy.CandyLabel,
+				CandyType:  t.Candy.CandyType,
+				Rate:       t.Candy.Rate,
+				Decimal:    t.Candy.Decimal,
+			})
 		}
 		value.Value = price.String()
+		value.CandyInfo = candyInfo
 		rankInfo = append(rankInfo, value)
 	}
 	page.List = rankInfo
