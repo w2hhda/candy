@@ -7,7 +7,7 @@ import (
 	"math/big"
 )
 
-const DIAMOND_LEN  = 3
+const DIAMOND_LEN = 3
 
 type Request struct {
 	AppVersion string `json:"app_version"`

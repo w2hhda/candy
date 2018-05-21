@@ -85,3 +85,115 @@ url:api/game/over
 
         }
     }
+
+###3. 游戏排行榜
+method: post
+url:api/rank
+参数:
+
+    {
+        "page_number": 0 //代表上一页的页码，第一次取传0
+    }
+
+返回:
+
+    {
+        "code": 0,
+        "message": "success",
+        "value": {
+            "page_number": 1,
+            "page_size": 4,
+            "total_page": 1,
+            "total_count": 5,
+            "list": [
+                {
+                    "addr": "0xfb0a596ec522791b99a7162fee7891a43186745R",
+                    "count": "26666600",
+                    "value": "313332500",
+                    "candy_info": [
+                        {
+                            "id": 0,
+                            "all_count": "",
+                            "remaining_count": "",
+                            "token_addr": "",
+                            "candy_label": "ETH",
+                            "candy_type": 1,
+                            "rate": 11,
+                            "decimal": 18,
+                            "alias": "ss",
+                            "average": 0
+                        },
+                        {
+                            "id": 0,
+                            "all_count": "",
+                            "remaining_count": "",
+                            "token_addr": "",
+                            "candy_label": "BTC",
+                            "candy_type": 2,
+                            "rate": 12,
+                            "decimal": 8,
+                            "alias": "s d f s d f",
+                            "average": 0
+                        }
+                    ]
+                },
+                {
+                    "addr": "0xfb0a596ec522791b99a7162fee7891a43186745D",
+                    "count": "37",
+                    "value": "407",
+                    "candy_info": [
+                        {
+                            "id": 0,
+                            "all_count": "",
+                            "remaining_count": "",
+                            "token_addr": "",
+                            "candy_label": "ETH",
+                            "candy_type": 1,
+                            "rate": 11,
+                            "decimal": 18,
+                            "alias": "ss",
+                            "average": 0
+                        }
+                    ]
+                },
+                {
+                    "addr": "s23423423423",
+                    "count": "10",
+                    "value": "110",
+                    "candy_info": [
+                        {
+                            "id": 0,
+                            "all_count": "",
+                            "remaining_count": "",
+                            "token_addr": "",
+                            "candy_label": "ETH",
+                            "candy_type": 1,
+                            "rate": 11,
+                            "decimal": 18,
+                            "alias": "ss",
+                            "average": 0
+                        }
+                    ]
+                },
+                {
+                    "addr": "s234234www23423",
+                    "count": "10",
+                    "value": "110",
+                    "candy_info": [
+                        {
+                            "id": 0,
+                            "all_count": "",
+                            "remaining_count": "",
+                            "token_addr": "",
+                            "candy_label": "ETH",
+                            "candy_type": 1,
+                            "rate": 11,
+                            "decimal": 18,
+                            "alias": "ss",
+                            "average": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    }

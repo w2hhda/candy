@@ -3,6 +3,8 @@ package models
 import (
 	"github.com/astaxie/beego"
 	"math/big"
+	"strconv"
+	"strings"
 )
 
 type RankInfo struct {
@@ -50,6 +52,9 @@ func Rank(lastPageNumber int64) (Page, error) {
 	}
 	page.List = rankInfo
 	page.PageSize = int64(len(rankInfo))
-
 	return page, err
+}
+
+func GetRankCacheKey(pageNumber int64) string {
+	return strings.Join([]string{"_rank_", strconv.FormatInt(pageNumber, 10)}, "_")
 }

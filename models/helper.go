@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
+	"github.com/go-redis/redis"
 )
 
 func init() {
@@ -31,4 +32,18 @@ func DB() *sql.DB {
 		panic(err)
 	}
 	return db
+}
+
+func Redis() *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     beego.AppConfig.String("redis_addr"),
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+
+	_, err := client.Ping().Result()
+	if err != nil {
+		panic(err)
+	}
+	return client
 }

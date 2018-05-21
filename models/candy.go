@@ -20,6 +20,11 @@ type Candy struct {
 	Average        int     `json:"average" orm:"column(average)"`
 }
 
+type IndexInfo struct {
+	AllCandyCount string `json:"all_candy_count"`
+	AllGameList   []Game `json:"all_game_list"`
+}
+
 func CandyTableName() string {
 	return "candy"
 }
@@ -91,4 +96,35 @@ func ListUsefulCandy(candyCount int, diamondCount int) (Candy, Candy, error) {
 		}
 	}
 	return normal, diamond, err
+}
+
+func ListIndex() (IndexInfo, error) {
+	act := Candy{}
+	list, err := act.ListAllCandy()
+	if err != nil {
+		beego.Warn(err)
+		return IndexInfo{}, err
+	} else {
+		game := Game{}
+		gList, err := game.ListAllGame()
+		if err != nil {
+			beego.Warn(err)
+			return IndexInfo{}, err
+		}
+
+		var indexInfo IndexInfo
+		var allCount big.Int
+		for _, candy := range list {
+			count, _ := new(big.Int).SetString(candy.AllCount, 10)
+			allCount = *new(big.Int).Add(&allCount, count)
+		}
+		indexInfo.AllCandyCount = allCount.String()
+		indexInfo.AllGameList = gList
+
+		return indexInfo, nil
+	}
+}
+
+func GetIndexCacheKey() string {
+	return "candy_index"
 }

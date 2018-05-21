@@ -4,7 +4,7 @@ import (
 	"github.com/w2hhda/candy/models"
 	"github.com/astaxie/beego"
 	"encoding/json"
-	"math/big"
+	"time"
 )
 
 type CandyController struct {
@@ -40,33 +40,25 @@ func (c *CandyController) ListCandyPage() {
 
 // @router /api/candy/index [*]
 func (c *CandyController) ListAllCandyCountAndGame() {
-	act := models.Candy{}
-	list, err := act.ListAllCandy()
+
+	client := models.Redis()
+	var indexInfo models.IndexInfo
+	err := client.Get(models.GetIndexCacheKey()).Scan(&indexInfo)
 	if err != nil {
-		beego.Warn(err)
-		c.RetError(errDB)
-	} else {
-		game := models.Game{}
-		gList, err := game.ListAllGame()
+		indexInfo, err := models.ListIndex()
 		if err != nil {
-			beego.Warn(err)
 			c.RetError(errDB)
-		}
-
-		var allCount big.Int
-		for _, candy := range list {
-			if err != nil {
-				c.RetError(errDB)
-				break
-			} else {
-				count, _ := big.NewInt(1).SetString(candy.AllCount, 10)
-				allCount = *big.NewInt(1).Add(&allCount, count)
+		} else {
+			beego.Info(indexInfo)
+			by, err := json.Marshal(indexInfo)
+			if err == nil {
+				status, err := client.Set(models.GetIndexCacheKey(), by, 12*time.Hour).Result()
+				beego.Warn("status", status, err)
 			}
+			c.RetSuccess(indexInfo)
 		}
-
-		c.RetSuccess(map[string]interface{}{
-			"all_candy_count": allCount.String(),
-			"all_game_list":   gList,
-		})
+	} else {
+		c.RetSuccess(indexInfo)
 	}
+
 }
