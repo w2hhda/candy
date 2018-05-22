@@ -4,7 +4,6 @@ import (
 	"github.com/w2hhda/candy/models"
 	"github.com/astaxie/beego"
 	"encoding/json"
-	"time"
 )
 
 type CandyController struct {
@@ -38,27 +37,14 @@ func (c *CandyController) ListCandyPage() {
 	}
 }
 
+// 钱包app 应用tab 显示的内容
 // @router /api/candy/index [*]
 func (c *CandyController) ListAllCandyCountAndGame() {
-
-	client := models.Redis()
-	var indexInfo models.IndexInfo
-	err := client.Get(models.GetIndexCacheKey()).Scan(&indexInfo)
+	indexInfo, err := models.ListIndex()
 	if err != nil {
-		indexInfo, err := models.ListIndex()
-		if err != nil {
-			c.RetError(errDB)
-		} else {
-			beego.Info(indexInfo)
-			by, err := json.Marshal(indexInfo)
-			if err == nil {
-				status, err := client.Set(models.GetIndexCacheKey(), by, 12*time.Hour).Result()
-				beego.Warn("status", status, err)
-			}
-			c.RetSuccess(indexInfo)
-		}
+		c.RetError(errDB)
 	} else {
+		beego.Info(indexInfo)
 		c.RetSuccess(indexInfo)
 	}
-
 }
