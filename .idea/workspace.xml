@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="01ed2d63-01d4-40d3-b23d-7276e9da3b98" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candy" beforeDir="false" afterPath="$PROJECT_DIR$/candy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/app.conf" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/candy.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/candy.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -56,22 +53,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="candy.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="candy.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/candy.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="655">
-              <caret line="49" selection-start-line="49" selection-end-line="49" />
+            <state relative-caret-position="480">
+              <caret line="26" selection-start-line="26" selection-end-line="26" />
               <folding>
-                <element signature="e#21#118#0" expanded="true" />
+                <element signature="e#21#110#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="console.sql" pinned="false" current-in-tab="true">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/81a68d39-62fc-4950-a761-0ade8b33781f/console.sql">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
       <file leaf-file-name="candy.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/candy.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
+            <state relative-caret-position="2000">
               <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
             </state>
           </provider>
@@ -117,7 +119,6 @@
         <option value="$PROJECT_DIR$/models/Config.go" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/81a68d39-62fc-4950-a761-0ade8b33781f/console_1.sql" />
         <option value="81a68d39-62fc-4950-a761-0ade8b33781f/schema/dxgame/table/candy_info.sql" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/81a68d39-62fc-4950-a761-0ade8b33781f/console.sql" />
         <option value="$PROJECT_DIR$/controllers/Record.go" />
         <option value="$PROJECT_DIR$/candy.conf" />
         <option value="$PROJECT_DIR$/controllers/addmin.go" />
@@ -155,6 +156,7 @@
         <option value="$PROJECT_DIR$/controllers/commom.go" />
         <option value="$PROJECT_DIR$/controllers/rank.go" />
         <option value="$PROJECT_DIR$/controllers/candy.go" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/81a68d39-62fc-4950-a761-0ade8b33781f/console.sql" />
       </list>
     </option>
   </component>
@@ -172,9 +174,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="27" />
-    <option name="width" value="1880" />
-    <option name="height" value="1000" />
+    <option name="x" value="1202" />
+    <option name="y" value="25" />
+    <option name="width" value="718" />
+    <option name="height" value="1002" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -187,38 +190,6 @@
             <path>
               <item name="candy" type="b2602c69:ProjectViewProjectNode" />
               <item name="candy" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="candy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="candy" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="user" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="candy" type="b2602c69:ProjectViewProjectNode" />
@@ -239,7 +210,7 @@
     <property name="database.console.LAST_STATE" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../george518/PPGo_Job" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
@@ -359,25 +330,26 @@
     <frame x="0" y="25" width="1920" height="1002" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.18157615" />
       <window_info anchor="bottom" id="TODO" order="11" />
+      <window_info anchor="bottom" id="SQL Generator" weight="0.7830189" />
       <window_info anchor="bottom" id="Event Log" order="3" sideWeight="0.5005325" side_tool="true" weight="0.32900944" />
+      <window_info anchor="right" id="Database" order="0" visible="true" weight="0.2454739" />
       <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.32900944" />
       <window_info anchor="bottom" id="Run" order="7" weight="0.32979977" />
-      <window_info anchor="bottom" id="Terminal" order="2" sideWeight="0.49946752" weight="0.8066038" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.1799787" />
-      <window_info anchor="right" id="Database" order="0" weight="0.2454739" />
-      <window_info anchor="bottom" id="Find" order="6" weight="0.32900944" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="2" sideWeight="0.49946752" weight="0.8066038" />
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="5" />
+      <window_info anchor="bottom" id="Find" order="6" weight="0.32900944" />
+      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Database Console" order="4" weight="0.32900944" />
+      <window_info anchor="bottom" id="Message" order="5" />
       <window_info anchor="bottom" id="Messages" order="12" />
     </layout>
   </component>
@@ -397,6 +369,23 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/controllers/candy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="3" selection-start-line="3" selection-end-line="5" selection-end-column="19" />
+          <folding>
+            <element signature="e#21#110#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/candy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2000">
+          <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../../astaxie/beego/log.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
@@ -425,42 +414,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-14.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-16.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-17.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-18.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-19.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log.2018-05-20.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/routers/commentsRouter_controllers.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1780">
           <caret line="92" column="32" lean-forward="true" selection-start-line="92" selection-start-column="32" selection-end-line="92" selection-end-column="32" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/default_test.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/time.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/rand.go">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="das://81a68d39-62fc-4950-a761-0ade8b33781f/schema/dxgame/table/game">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
@@ -501,9 +460,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="23" selection-end-column="1" />
-          <folding>
-            <element signature="e#14#166#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -518,9 +474,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
           <caret line="22" column="36" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="36" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -559,16 +512,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/game.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/record.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
           <caret line="16" column="22" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="22" />
-          <folding>
-            <element signature="e#21#110#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -597,9 +544,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
           <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
-          <folding>
-            <element signature="e#16#98#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -616,9 +560,6 @@
           <caret line="235" column="19" selection-start-line="235" selection-start-column="5" selection-end-line="235" selection-end-column="19" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/config.go">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/models/helper.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -652,9 +593,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
           <caret line="33" selection-start-line="33" selection-end-line="33" />
-          <folding>
-            <element signature="e#21#85#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -697,9 +635,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="960">
           <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
-          <folding>
-            <element signature="e#21#152#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -712,20 +647,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/candy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
+        <state relative-caret-position="2000">
           <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/candy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="49" selection-start-line="49" selection-end-line="49" />
+        <state relative-caret-position="480">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
           <folding>
-            <element signature="e#21#118#0" expanded="true" />
+            <element signature="e#21#110#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/81a68d39-62fc-4950-a761-0ade8b33781f/console.sql">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
